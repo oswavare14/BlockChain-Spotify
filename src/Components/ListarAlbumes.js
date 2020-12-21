@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import Web3 from 'web3'
 import { Abi, Address } from "../Abis/abi"
+import CrearCanciones from "./CrearCanciones"
+import { Link } from "react-router-dom";
 
 class ListarAlbumes extends Component {
     constructor() {
         super()
         this.state = {
+            ID:"",
             Artista: "",
             NombreAlbum: "",
             Album: []
@@ -22,22 +25,32 @@ class ListarAlbumes extends Component {
         const album = new web3.eth.Contract(Abi, Address)
         const cantidadAlbumes = await album.methods.CantidadAlbumes().call()
 
-        for (let i = 1; i <= cantidadAlbumes; i++)
+        for (let i = 3; i <= cantidadAlbumes; i++){
             var nombre = await album.methods.albumes(i).call()
-        console.log("Albumes - ", nombre)
-
+            this.setState({
+                ID:nombre.id,
+                NombreAlbum: nombre.NombreAlbum,
+                Artista: nombre.ArtistaAlbum
+            })
+            this.state.Album.push({ ID:this.state.ID, NombreAlbum: this.state.NombreAlbum, ArtistaAlbum: this.state.Artista })
+        }
+        this.setState({
+            Album :this.state.Album 
+        })
+        
+     //   console.log("Esto es lo de listar - ",this.state.Album)
+     //   console.log("Esto es lo de listar Nombre- ",this.state.Album[0].NombreArtista)
     }
 
     render() {
         const myFunction = () => {
-            // Declare variables
+
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput");
             filter = input.value.toUpperCase();
             table = document.getElementById("myTable");
             tr = table.getElementsByTagName("tr");
 
-            // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[1];
                 if (td) {
@@ -91,56 +104,34 @@ class ListarAlbumes extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 w-10 h-10">
-                                                    <img class="w-full h-full rounded-full"
-                                                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                                        alt="" />
-                                                </div>
-                                                <div class="ml-3">
-                                                    <p class="text-gray-900 whitespace-no-wrap">
-                                                        Vera Carpenter
-                                            </p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">El Ultimo Tour del Mundo</p>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">
-                                                Jan 21, 2020
-                                    </p>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 w-10 h-10">
-                                                    <img class="w-full h-full rounded-full"
-                                                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                                        alt="" />
-                                                </div>
-                                                <div class="ml-3">
-                                                    <p class="text-gray-900 whitespace-no-wrap">
-                                                        Vera Carpenter
-                                            </p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">Legends Never Die</p>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">
-                                                Jan 21, 2020
-                                    </p>
-                                        </td>
-                                    </tr>
-
+                                    {this.state.Album.map(elemento => {
+                                        return (
+                                            <tr key={elemento.ID}>
+                                                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                    <div class="flex items-center">
+                                                        <div class="ml-3">
+                                                            <p class="text-gray-900 whitespace-no-wrap">
+                                                                {elemento.ArtistaAlbum}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                    <p class="text-gray-900 whitespace-no-wrap">{elemento.NombreAlbum}</p>
+                                                </td>
+                                                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                    <button class="bg-gray-900 hover:bg-gray-700 text-white text-base font-semibold px-6 py-2 rounded-lg focus:outline-none focus:shadow-outline">
+                                                        <Link to= {{
+                                                            pathname:'/canciones',
+                                                            aboutProps:{
+                                                                id: elemento.ID
+                                                            }
+                                                        }} className="btn btn-primary rounded cursor-pointer text-white">Agregar Canciones</Link>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
 
                                 </tbody>
                             </table>

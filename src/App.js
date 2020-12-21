@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import CrearAlbum from './Components/CrearAlbum'
 import CrearCanciones from './Components/CrearCanciones'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 class App extends Component {
 
@@ -8,7 +9,12 @@ class App extends Component {
 
     return (
       <div>
-        <CrearAlbum/>
+        <Router>
+          <Switch>
+            <Route path="/" exact component={CrearAlbum} />
+            <Route path="/canciones" component={CrearCanciones} />
+          </Switch>
+        </Router>
       </div>
     );
   }

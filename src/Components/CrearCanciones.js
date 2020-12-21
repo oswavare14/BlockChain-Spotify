@@ -5,12 +5,13 @@ import ListarCanciones from './ListarCanciones'
 
 class CrearCanciones extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             Nombre: "",
-            Artista: "",
-            Album: []
+            Genero: "",
+            Duracion: "",
+            id: props.location.aboutProps.id
         }
     }
 
@@ -20,21 +21,29 @@ class CrearCanciones extends Component {
         })
     }
 
-    handleArtista = (event) => {
+    handleGenero = (event) => {
         this.setState({
-            Artista: event.target.value
+            Genero: event.target.value
         })
     }
 
-    AgregarAlbum = async (event) => {
+    handleDuracion = (event) => {
+        this.setState({
+            Duracion: event.target.value
+        })
+    }
+
+    AgregarCancion = async (event) => {
         event.preventDefault()
         const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545')
         const accounts = await web3.eth.getAccounts()
         const album = new web3.eth.Contract(Abi, Address)
-        const crearAlbum = album.methods.agregarAlbum(this.state.Artista, this.state.Nombre)
+        const crearAlbum = album.methods.agregarCancion(this.state.id, this.state.Nombre, this.state.Genero, this.state.Duracion)
             .send({ from: accounts[0] }).once('receipt', (receipt) => {
             })
     }
+
+
 
     render() {
         return (
@@ -49,25 +58,25 @@ class CrearCanciones extends Component {
                         <div class="shadow-md flex-auto max-w-sm p-10 pb-20">
                             <div class="w-full">
                                 <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase"><span class="text-red-400 mr-1">*</span>Nombre Cancion</div>
-                                <div class="my-2 bg-white p-1 flex border border-gray-200 rounded">  <input onChange={this.handleArtista} placeholder="David" class="p-1 px-2 appearance-none outline-none w-full text-gray-800" />  </div>
+                                <div class="my-2 bg-white p-1 flex border border-gray-200 rounded">  <input onChange={this.handleNombre} placeholder="David" class="p-1 px-2 appearance-none outline-none w-full text-gray-800" />  </div>
                             </div>
                             <div class="w-full">
                                 <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase"><span class="text-red-400 mr-1">*</span>Duracion</div>
-                                <div class="my-2 bg-white p-1 flex border border-gray-200 rounded">  <input type="number" onChange={this.handleNombre} placeholder="3" class="p-1 px-2 appearance-none outline-none w-full text-gray-800" />  </div>
+                                <div class="my-2 bg-white p-1 flex border border-gray-200 rounded">  <input type="number" onChange={this.handleDuracion} placeholder="3" class="p-1 px-2 appearance-none outline-none w-full text-gray-800" />  </div>
                             </div>
                             <div class="w-full">
                                 <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase"><span class="text-red-400 mr-1">*</span>Genero</div>
-                                <div class="my-2 bg-white p-1 flex border border-gray-200 rounded">  <input onChange={this.handleArtista} placeholder="David" class="p-1 px-2 appearance-none outline-none w-full text-gray-800" />  </div>
+                                <div class="my-2 bg-white p-1 flex border border-gray-200 rounded">  <input onChange={this.handleGenero} placeholder="David" class="p-1 px-2 appearance-none outline-none w-full text-gray-800" />  </div>
                             </div>
                             <div class="mt-6 relative">
-                                <button onClick={this.AgregarAlbum} class="shadow-md font-medium py-2 px-4 text-green-500
+                                <button onClick={this.AgregarCancion} class="shadow-md font-medium py-2 px-4 text-green-500
                         cursor-pointer bg-teal-600 rounded text-lg tr-mt  absolute text-center w-full">Agregar Cancion</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <ListarCanciones/>
+                    <ListarCanciones id={this.state.id}/>
                 </div>
             </div>
         );
