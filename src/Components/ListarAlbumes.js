@@ -20,8 +20,11 @@ class ListarAlbumes extends Component {
         const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545')
         const accounts = await web3.eth.getAccounts()
         const album = new web3.eth.Contract(Abi,Address)
-        const cantidadAlbumes = await album.methods.call()
-        console.log("Cantidad Albumes - ",cantidadAlbumes) 
+        const cantidadAlbumes = await album.methods.CantidadAlbumes().call()
+        
+        for (let i=1; i<=cantidadAlbumes; i++)
+            var nombre = await album.methods.albumes(i).call()
+            console.log("Albumes - ",nombre) 
         
     }
 
