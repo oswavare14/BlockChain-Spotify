@@ -1,11 +1,15 @@
 import { Component } from 'react';
 import CrearAlbum from './Components/CrearAlbum'
-import ListarAlbumes from './Components/ListarAlbumes'
+import CrearCanciones from './Components/CrearCanciones'
 
 class App extends Component {
-  render(){
-    return(
-      <CrearAlbum/>
+
+  render() {
+
+    return (
+      <div>
+        <CrearAlbum/>
+      </div>
     );
   }
 }
